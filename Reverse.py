@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 L=300.0 #前后轮轴距
 w=150.0 #轴长
@@ -38,3 +39,32 @@ def Tan(degreef):
     tan = float(math.tan(math.radians(degreef)))
     return tan
 
+# 获得像素坐标集
+def getPointArray(angle):
+    #相机内参矩阵K
+    K=np.mat([
+        [100, 0, 100],
+        [0, 100, 100],
+        [0, 0, 1]
+    ])
+    array=[]
+
+    #均匀采样
+    y=-50 #摄像头与地面的高度
+    for x in range(-100,100):
+        z=getZout(x,angle)
+        if(z<0):
+            continue
+        camera=np.mat([[x],[y],[int(z)]]) #相机坐标点
+        point=(K*camera)/int(z)
+        array.append(np.delete(point,2))
+
+    for x in range(-100,100):
+        z=getZin(x,angle)
+        if(z<0):
+            continue
+        camera = np.mat([[x], [y], [int(z)]])  # 相机坐标点
+        point = (K * camera) / int(z)
+        array.append(np.delete(point, 2))
+
+    return array
