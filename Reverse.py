@@ -57,14 +57,18 @@ def getPointArray(angle):
             continue
         camera=np.mat([[x],[y],[int(z)]]) #相机坐标点
         point=(K*camera)/int(z)
-        array.append(np.delete(point,2))
+        point = np.delete(point,2).astype(int)
+        point=point.A
+        array.append(np.squeeze(point))
 
     for x in range(-100,100):
         z=getZin(x,angle)
         if(z<0):
             continue
-        camera = np.mat([[x], [y], [int(z)]])  # 相机坐标点
+        camera = np.mat([[x], [y], [int(z)]])  #相机坐标点
         point = (K * camera) / int(z)
-        array.append(np.delete(point, 2))
+        point = np.delete(point,2).astype(int)
+        point=point.A
+        array.append(np.squeeze(point))
 
     return array
